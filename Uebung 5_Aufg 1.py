@@ -4,8 +4,6 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import QDesktopServices
 import urllib.parse 
-query = 'Hellö Wörld@' 
-a = urllib.parse.quote(query)
 
 class Fenster(QMainWindow):
     def __init__(self):
@@ -42,8 +40,12 @@ class Fenster(QMainWindow):
         self.birthdateLIne = QDateEdit()
         self.adressLabel = QLabel("Adresse:")
         self.adressLine = QLineEdit()
+        self.adressnumberLabel = QLabel("Adress Nr:")
+        self.adressnumberLine = QLineEdit()
         self.plzLabel = QLabel("Post Leitzahl:")
         self.plzLine = QLineEdit()
+        self.villageLabel = QLabel("Wohnort:")
+        self.villageLine = QLineEdit()
         self.landLabel = QLabel("Land:")
 
         #Auswahl vorgeben durch ComboBox
@@ -61,13 +63,17 @@ class Fenster(QMainWindow):
         layout.addWidget(self.birthdateLIne, 2, 1)
         layout.addWidget(self.adressLabel, 3, 0)
         layout.addWidget(self.adressLine, 3, 1)
-        layout.addWidget(self.plzLabel, 4, 0)
-        layout.addWidget(self.plzLine, 4, 1)
-        layout.addWidget(self.landLabel, 5, 0)
-        layout.addWidget(self.countries, 5, 1)
-        layout.addWidget(self.button1, 6, 0, 1, 2)
-        layout.addWidget(self.button2, 7, 0, 1, 2)
-        layout.addWidget(self.button3, 8, 0, 1, 2)
+        layout.addWidget(self.adressnumberLabel, 4, 0)
+        layout.addWidget(self.adressnumberLine, 4, 1)
+        layout.addWidget(self.plzLabel, 5, 0)
+        layout.addWidget(self.plzLine, 5, 1)
+        layout.addWidget(self.villageLabel, 6, 0)
+        layout.addWidget(self.villageLine, 6, 1)
+        layout.addWidget(self.landLabel, 7, 0)
+        layout.addWidget(self.countries, 7, 1)
+        layout.addWidget(self.button1, 8, 0, 1, 2)
+        layout.addWidget(self.button2, 9, 0, 1, 2)
+        layout.addWidget(self.button3, 10, 0, 1, 2)
 #-----------------------------------------------------------------------------
         ## Zentrierung der Widgets
         center = QWidget()
@@ -88,7 +94,9 @@ class Fenster(QMainWindow):
         formfields.append(self.nameLine.text())
         formfields.append(self.birthdateLIne.text())
         formfields.append(self.adressLine.text())
+        formfields.append(self.adressnumberLine.text())
         formfields.append(self.plzLine.text())
+        formfields.append(self.villageLine.text())
         formfields.append(self.countries.currentText())
 
         document, filter = QFileDialog.getSaveFileName(self, 
@@ -102,7 +110,12 @@ class Fenster(QMainWindow):
 
 
     def open_Web(self):
-        link = "https://www.google.ch/maps/place/Hofackerstrasse+30+4132+Muttenz+Schweiz" 
+        adressWeb = self.adressLine.text()
+        adressNumberWeb = self.adressnumberLine.text()
+        plzWeb = self.plzLine.text()
+        villageWeb = self.villageLine.text()
+        countriesWeb = self.countries.currentText()
+        link = f"https://www.google.ch/maps/place/{adressWeb}+{adressNumberWeb}+{plzWeb}+{villageWeb}+{countriesWeb}"  
         QDesktopServices.openUrl(QUrl(link))
     
     def open_oldFolder(self):
@@ -118,8 +131,10 @@ class Fenster(QMainWindow):
             self.nameLine.setText(i[1])
             self.birthdateLIne.setDate(QDate.fromString(i[2], "yyyy-MM-dd"))
             self.adressLine.setText(i[3])
-            self.plzLine.setText(i[4])
-            self.countries.setCurrentText(i[5])
+            self.adressnumberLine.setText(i[4])
+            self.plzLine.setText(i[5])
+            self.villageLine.setText(i[6])
+            self.countries.setCurrentText(i[7])
     
 
 def main():

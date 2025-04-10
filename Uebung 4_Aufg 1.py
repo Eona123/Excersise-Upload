@@ -1,4 +1,5 @@
 import sys
+import csv
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 
@@ -28,8 +29,8 @@ class Fenster(QMainWindow):
 
 #-----------------------------------------------------------------------------
 
-        layout = QGridLayout()
-
+        layout = QGridLayout()                          #Formlayout ist mit Zeilen --> .addRow
+                                                        #GrdiLayout ist immer mit Boxen denen man eine Koordinate gibt --> .addWidget
         self.prenameLabel = QLabel("Vorname:", )
         self.prenameLine = QLineEdit()
         self.nameLabel = QLabel("Name:")
@@ -41,6 +42,8 @@ class Fenster(QMainWindow):
         self.plzLabel = QLabel("Post Leitzahl:")
         self.plzLine = QLineEdit()
         self.landLabel = QLabel("Land:")
+
+        #Auswahl vorgeben durch ComboBox
         self.countries = QComboBox() 
         self.countries.addItems(["Schweiz", "Deutschland", "Österreich"])
         self.button1 = QPushButton("Save")
@@ -63,12 +66,6 @@ class Fenster(QMainWindow):
         center = QWidget()
         center.setLayout(layout)
         self.setCentralWidget(center)
-        
-        ## Widgets erstellen
-        # ...
-
-        ## Layout füllen
-        # ...
 
         ## Fenster anzeigen
         self.show()
@@ -77,24 +74,40 @@ class Fenster(QMainWindow):
     def createConnects(self):
         self.button1.clicked.connect(self.txtExport) 
 
+    #Musterlösung für CSV export
+    def write_file(self):
+        formfields = []
+        formfields.append(self.prenameLine.text())
+        formfields.append(self.nameLine.text())
+        formfields.append(self.birthdateLIne.text())
+        formfields.append(self.adressLine.text())
+        formfields.append(self.plzLine.text())
+        formfields.append(self.countries.currentText())
+
+        file = open("ausgabe2.csv","w", encoding="utf-8")
+        writer = csv.writer(file, delimiter = ",", lineterminator="\n")
+        writ.writerow(formfields)
+        file.close()
+
     def txtExport(self):
-        f = open("ausgabe1.txt","w", encoding="utf-8")
-        prename = self.prenameLine .text()
-        name = self.nameLine.text()
-        birthday = self.birthdateLIne.text()
-        adress = self.adressLine.text()
-        plz = self.plzLine.text()
-        land = self.countries.currentText()
-        print(name)
+        formfields = []
+        formfields.append(self.prenameLine.text())
+        formfields.append(self.nameLine.text())
+        formfields.append(self.birthdateLIne.text())
+        formfields.append(self.adressLine.text())
+        formfields.append(self.plzLine.text())
+        formfields.append(self.countries.currentText())
 
-        f.write(prename+ ";" 
-                + name+ ";" 
-                + str(birthday)+ ";" 
-                + adress+ ";"
-                + plz+ ";" 
-                + land + ";")
-        f.close()
+        document, filter = QFileDialog.getSaveFileName(self, 
+        "Datei Sepeichern",
+        "C:/Users/adrie/SynologyDrive/13_FHNW/2.Semester/05_GeoProg",
+        "Text Datei (*.csv)")
+        file = open(document, "w", encoding="utf-8", newline="\n")
+        writer = csv.writer(file, delimiter = ";", lineterminator = "\n")
+        writer.writerow(formfields)
+        file.close()
 
+        
     def menu_quit(self):
         print("Quit")
         self.close()                  #--> Schliesst das fenster
